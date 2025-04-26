@@ -1,0 +1,38 @@
+{
+  "name": "main_tms",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack --config webpack.config.js --mode development"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dauHerkert/Main_TMS.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dauHerkert/Main_TMS/issues"
+  },
+  "homepage": "https://github.com/dauHerkert/Main_TMS#readme",
+  "devDependencies": {
+    "css-loader": "^6.8.1",
+    "jquery": "^3.7.0",
+    "mini-css-extract-plugin": "^2.7.6",
+    "webpack": "^5.88.1",
+    "webpack-cli": "^5.1.4"
+  },
+  "dependencies": {
+    "@firebase/app": "^0.9.17",
+    "cropperjs": "^1.6.0",
+    "firebase": "^10.3.1",
+    "sass": "^1.66.1",
+    "sass-loader": "^13.3.2",
+    "select2": "^4.1.0-rc.0",
+    "tabulator-tables": "^5.4.3",
+    "toastr": "^2.1.4",
+    "webcamjs": "^1.0.26"
+  }
+}
