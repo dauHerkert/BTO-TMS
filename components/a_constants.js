@@ -46,7 +46,7 @@
  
  /* Email Templates */
  export const URLEMAILTEMPLATES = {
-   URLEMAILFOLDER: 'https://raw.githubusercontent.com/dauHerkert/BTO-TMS/main/mails_templates/',
+   URLEMAILFOLDER: 'https://raw.githubusercontent.com/dauHerkert/BTO-TMS/master/mails_templates/',
    URLREGISTER_EN: 'register_en_email.html',
    URLREGISTER_DE: 'register_de_email.html',
    URLREGISTRATIONLINK_EN: 'registration_link_en_email.html',
