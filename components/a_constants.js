@@ -35,14 +35,14 @@
  /* URL Webflow Assets for Images and Icons */
  /* must be changed manually in each email template, where the respective asset is used */
  /* TODO: Check if it can be centralized also in the above mentioned pages. */
- export const URLASSETS = 'https://uploads-ssl.webflow.com/6453e5fbbb9ef87f5979b611/';
+ export const URLASSETS = 'https://cdn.prod.website-files.com/68010117e67f664fd33de186/';
  /* ASSETS - Icons */
- export const ICON_LOGOUT = '6453e5fbbb9ef8cc1279b64a_logout_icon.svg';
- export const ICON_PENCIL = '6462983e76b4d1ee3ac14cd1_pencil-alt.png';
- export const ICON_TRASH = '6462e184b518709fa4ff5fe6_trash.png';
- export const ICON_SENDMAIL = '6468108d231ed90e8f74b109_Vector.png'; // Send Email icon
+ export const ICON_LOGOUT = '68010117e67f664fd33de194_logout_icon.svg';
+ export const ICON_PENCIL = '68010117e67f664fd33de1c3_pencil-alt.png';
+ export const ICON_TRASH = '68010117e67f664fd33de1d9_trash.png';
+ export const ICON_SENDMAIL = '68010117e67f664fd33de228_Vector.png'; // Send Email icon
  /* ASSETS - Images */
- export const IMAGE_PROFILE = '6453e5fbbb9ef8507179b64c_profile%20picture.png'; // FallBack Profile Picture
+ export const IMAGE_PROFILE = '68010117e67f664fd33de19e_profile%20picture.png'; // FallBack Profile Picture
  
  /* Email Templates */
  export const URLEMAILTEMPLATES = {
@@ -101,10 +101,10 @@
   //export const IMAGE_LOGO_2 = '646cfb750cadf08ca3047b91_Color%3DDefault%20(1).png';
 
  /* ASSETS - Images - used in email templates */
- export const firstImageURL = "https://cdn.prod.website-files.com/649471d58c4292fde7b0bd0a/67bbf02cbcdca263d01eef54_PTGP-2025_Logo_Datum_black-p-500.png";
+ export const firstImageURL = "https://cdn.prod.website-files.com/68010117e67f664fd33de186/68118591861fe7c407eebac3_BTO.png";
  export const firstImageStyle = "max-height: 100px;width: 90%;max-width: 220px;";
 
- export const secondImageURL = "https://cdn.prod.website-files.com/649471d58c4292fde7b0bd0a/6799f99418837438221ecffd_WTA_Logo_WTA500_CMYK_Black-p-500.png";
+ export const secondImageURL = "https://cdn.prod.website-files.com/68010117e67f664fd33de186/68010117e67f664fd33de297_WTA_Logo_WTA500_CMYK_Black.png";
  export const secondImageStyle = "max-height: 100px;width: 70%;max-width: 150px;";
 
 
