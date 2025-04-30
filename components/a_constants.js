@@ -102,7 +102,7 @@
 
  /* ASSETS - Images - used in email templates */
  export const firstImageURL = "https://cdn.prod.website-files.com/68010117e67f664fd33de186/68118591861fe7c407eebac3_BTO.png";
- export const firstImageStyle = "max-height: 100px;width: 90%;max-width: 220px;";
+ export const firstImageStyle = "max-height: 90px;width: auto;max-width: 220px;";
 
  export const secondImageURL = "https://cdn.prod.website-files.com/68010117e67f664fd33de186/68010117e67f664fd33de297_WTA_Logo_WTA500_CMYK_Black.png";
  export const secondImageStyle = "max-height: 100px;width: 70%;max-width: 150px;";
@@ -122,7 +122,7 @@
     "origin": ["https://credential-berlin-tennis-open.webflow.io/", "https://credentials.porsche-tennis.com/"],
     "responseHeader": ["Content-Type", "Content-Length", "Content-Encoding", "Content-Disposition", "Access-Control-Allow-Origin"],
     "method": ["GET", "PUT", "POST", "DELETE"],
-    "maxAgeSeconds": 3600,
+    "maxAgeSeconds": 3600
   }
  ]
  */
