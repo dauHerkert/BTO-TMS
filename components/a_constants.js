@@ -31,6 +31,8 @@
  /**/
  export const DEFAULTCOMPANYID = 'vbIh3G2eLIOVEvXmKDKf'; // Not in Use
  export const PRESSCOMPANYID = 'JVhBWwwfdL03n4mh57rG';
+ export const PRESSCOMPANYPROFILE = 'YePkP8g3IvcDh8tThIdB'; // Pr1
+ export const PRESSCOMPANYZONES = 'General Access, Tournament Offices, TV Compound + Press'; // 'General Access, Tournament Offices, TV Compound + Press'
  
  /* URL Webflow Assets for Images and Icons */
  /* must be changed manually in each email template, where the respective asset is used */

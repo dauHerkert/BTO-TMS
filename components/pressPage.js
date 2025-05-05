@@ -1,4 +1,4 @@
-import { PRESSCOMPANYID, DEVEMAIL, URLEMAILTEMPLATES, firstImageURL, firstImageStyle, secondImageURL, secondImageStyle } from './a_constants';
+import { PRESSCOMPANYID, PRESSCOMPANYPROFILE, PRESSCOMPANYZONES, DEVEMAIL, URLEMAILTEMPLATES, firstImageURL, firstImageStyle, secondImageURL, secondImageStyle } from './a_constants';
 import { addDoc, collection, ref, uploadBytes, db, storage, user } from './a_firebaseConfig';
 import { escapeHtml } from './ab_base';
 import Cropper from 'cropperjs';
@@ -74,8 +74,8 @@ function pressFormSubmit(e) {
       user_company: PRESSCOMPANYID,
       user_firstcompany: PRESSCOMPANYID,
       account_type: 'Press',
-      user_type: '',
-      user_zones: '',
+      user_type: PRESSCOMPANYPROFILE,
+      user_zones: PRESSCOMPANYZONES,
       user_status: 'Pending',
       confirmed_email: true,
       language: language,
