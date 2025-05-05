@@ -288,6 +288,7 @@ export async function pageAdmin(user) {
         {title:"Fullname", field:"user_fullname", sorter:"string", width:0, cssClass:"hidden-column"},
         {title:"ITWA", field:"user_itwa", sorter:"string", width:0, cssClass:"hidden-column"},
         {title:"Press ID", field:"press_id", sorter:"string", width:0, cssClass:"hidden-column"},
+        {title:"Press Issuing Institution", field:"press_issuing_institution", sorter:"string", width:0, cssClass:"hidden-column"},
         {title:"Special requests", field:"special_requests", sorter:"string", width:0, cssClass:"hidden-column"},
         {title:"Workspot", field:"press_workspot", sorter:"string", width:0, cssClass:"hidden-column"},
         {title:"Press locker", field:"press_locker", sorter:"string", width:0, cssClass:"hidden-column"},
@@ -649,6 +650,7 @@ export async function pageAdmin(user) {
                 special_requests: user.supplier_special_request,
                 user_itwa: user.user_itwa,
                 press_id: user.press_card_number,
+                press_issuing_institution: user.press_issuing_institution,
                 press_workspot: user.press_workspot,
                 press_locker: user.press_locker,
                 press_hotel_info: user.press_hotel_info,
@@ -737,6 +739,7 @@ export async function pageAdmin(user) {
   let update_locker = document.getElementById('locker');
   let update_hotel_info = document.getElementById('hotel_info');
   let update_card_number = document.getElementById('press-id');
+  let update_press_issuing_institution = document.getElementById('press-issuing-institution');
   let update_special_request = document.getElementById('special_requests');
   let update_media_type = document.getElementById("update_media_type");
 
@@ -1176,6 +1179,7 @@ export async function pageAdmin(user) {
             press_locker: (String(update_locker.value).toLowerCase() === 'true'),
             press_hotel_info: (String(update_hotel_info.value).toLowerCase() === 'true'),
             press_card_number: escapeHtml(update_card_number.value),
+            press_issuing_institution: escapeHtml(update_press_issuing_institution.value),
             press_media_type: update_media_type.value,
             supplier_special_request: escapeHtml(update_special_request.value)
         }, { merge: true })

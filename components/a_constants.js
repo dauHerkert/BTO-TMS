@@ -119,7 +119,7 @@
  /*
  [
   {
-    "origin": ["https://credential-berlin-tennis-open.webflow.io/", "https://credentials.porsche-tennis.com/"],
+    "origin": ["https://credential-berlin-tennis-open.webflow.io/", "https://credentials.berlintennisopen.com/"],
     "responseHeader": ["Content-Type", "Content-Length", "Content-Encoding", "Content-Disposition", "Access-Control-Allow-Origin"],
     "method": ["GET", "PUT", "POST", "DELETE"],
     "maxAgeSeconds": 3600

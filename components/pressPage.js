@@ -38,10 +38,11 @@ function pressFormSubmit(e) {
   let press_phone = document.getElementById('press_phone');
   let press_itwa = document.getElementById('press_itwa');
   let press_workspace = document.getElementById('press_workspace');
-  let press_locker = document.getElementById('press_locker');
-  let press_hotel_info = document.getElementById('press_hotel_info');
+  //let press_locker = document.getElementById('press_locker');
+  //let press_hotel_info = document.getElementById('press_hotel_info');
   let language = localStorage.getItem('language');
   let press_card_number = document.getElementById('press_card_number')
+  let press_issuing_institution = document.getElementById('press_issuing_institution');
 
   if (press_firstname.value && press_lastname.value) {
     user_fullname = (press_firstname.value + press_lastname.value).toLowerCase().replace(/\s/g, '');
@@ -65,9 +66,10 @@ function pressFormSubmit(e) {
       user_phone: escapeHtml(press_phone.value),
       user_itwa: press_itwa.value,
       press_workspot: press_workspace.value,
-      press_locker: press_locker.value,
-      press_hotel_info: press_hotel_info.value,
+      //press_locker: press_locker.value,
+      //press_hotel_info: press_hotel_info.value,
       press_card_number: escapeHtml(press_card_number.value),
+      press_issuing_institution: escapeHtml(press_issuing_institution.value),
       press_form_user: true,
       user_company: PRESSCOMPANYID,
       user_firstcompany: PRESSCOMPANYID,
