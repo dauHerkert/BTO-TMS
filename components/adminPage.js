@@ -318,7 +318,7 @@ export async function pageAdmin(user) {
             let value = cell.getValue();
             let name = value;
             if (value === (userInfo.user_firstname + ' ' + userInfo.user_lastname)) {
-              name = '<span style="color:#E85B0F;"> > ' + value + '<span>';
+              name = '<span style="color:#9ac266;font-weight:700;">> ' + value + '<span>';
             }
             return name;
           }
@@ -424,7 +424,7 @@ export async function pageAdmin(user) {
           }, align: "center", cssClass:"center_col small_columns edit_delete_col", width: 120},
         {title: userTableSelectLabel, cssClass:"center_col tiny_columns", width: 105, formatter:function(cell, formatterParams) {
           let checkbox = document.createElement("input");
-          checkbox.style.accentColor="#E85B0F";
+          checkbox.style.accentColor="#1a361d";
           checkbox.style.height="18px";
           checkbox.style.width="18px";
           checkbox.type = "checkbox";
