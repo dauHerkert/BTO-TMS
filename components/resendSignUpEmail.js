@@ -19,14 +19,14 @@ async function resendEmail() {
   let storedLang = localStorage.getItem('language');
   let urlLang = '/en';
   // Subject for Register email - EN
-  let register_email_subject = 'Thank you for your registration';
+  let register_email_subject = 'Thanks for your registration';
   // Template for Register email - EN
   let register_email_url = URLEMAILTEMPLATES.URLEMAILFOLDER + URLEMAILTEMPLATES.URLREGISTER_EN;
 
   if (storedLang && storedLang === 'de') {
     urlLang = '/de';
     // Subject for Register email - DE
-    register_email_subject = 'Danke für Ihre Registrierung';
+    register_email_subject = 'Vielen Dank für Ihre Registrierung';
     // Template for Register email - DE
     register_email_url = URLEMAILTEMPLATES.URLEMAILFOLDER + URLEMAILTEMPLATES.URLREGISTER_DE;
   }

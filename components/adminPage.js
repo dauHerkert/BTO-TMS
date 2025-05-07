@@ -1186,9 +1186,9 @@ export async function pageAdmin(user) {
           .then(() => {
 
             // Applications - EN - Subjects and UI message Label
-            let application_rejected_subject = 'Application rejected';
+            let application_rejected_subject = 'Accreditation rejection';
             let application_rejected_label = 'User registration declined';
-            let application_accepted_subject = 'Application accepted';
+            let application_accepted_subject = 'Accreditation confirmation';
             let application_accepted_label = 'User registration accepted';
             // Applications - EN - Press Mr - URL
             let press_mr_application_rejected_url = URLEMAILTEMPLATES.URLEMAILFOLDER + URLEMAILTEMPLATES.URLMRAPPLICATIONREJECT_EN;
@@ -1212,7 +1212,7 @@ export async function pageAdmin(user) {
             // URL By Language - User
             if (user_language.value == 'de') {
               // Applications - DE - Subjects and UI message Label
-              application_rejected_subject = 'Akkreditierung Ablehnung';
+              application_rejected_subject = 'Akkreditierungsabsage';
               application_accepted_subject = 'Akkreditierungsbestätigung';
               // Applications - DE - Press Mr - URL
               press_mr_application_rejected_url = URLEMAILTEMPLATES.URLEMAILFOLDER + URLEMAILTEMPLATES.URLMRAPPLICATIONREJECT_DE;
@@ -1438,9 +1438,9 @@ export async function pageAdmin(user) {
           .then(() => {
 
             // Applications - EN - Subjects and UI message Label
-            let application_rejected_subject = 'Application rejected';
+            let application_rejected_subject = 'Accreditation rejection';
             let application_rejected_label = 'User registration declined';
-            let application_accepted_subject = 'Application accepted';
+            let application_accepted_subject = 'Accreditation confirmation';
             let application_accepted_label = 'User registration accepted';
             // Applications - EN - Press Mr - URL
             let press_mr_application_rejected_url = URLEMAILTEMPLATES.URLEMAILFOLDER + URLEMAILTEMPLATES.URLMRAPPLICATIONREJECT_EN;
@@ -1464,7 +1464,7 @@ export async function pageAdmin(user) {
             // URL By Language
             if (userData.data().language && userData.data().language == 'de') {
               // Applications - DE - Subjects and UI message Label
-              application_rejected_subject = 'Akkreditierung Ablehnung';
+              application_rejected_subject = 'Akkreditierungsabsage';
               application_accepted_subject = 'Akkreditierungsbestätigung';
               // Applications - DE - Press Mr - URL
               press_mr_application_rejected_url = URLEMAILTEMPLATES.URLEMAILFOLDER + URLEMAILTEMPLATES.URLMRAPPLICATIONREJECT_DE;
