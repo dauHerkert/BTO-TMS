@@ -16,7 +16,7 @@
  /* Environment Domain */
  /* needs to be changed manually on register_de_email.html & register_en_email.html & storage.cors.json */
  /* TODO: Check if it can be centralized also in the above mentioned pages. */
- export const URLENV = 'https://credential-berlin-tennis-open.webflow.io/'; //'https://credentials.porsche-tennis.com/';
+ export const URLENV = 'https://credentials.porsche-tennis.com/'; //'https://credentials.porsche-tennis.com/';
  
  /* URL Pages */
  export const URLACCOUNT = '/account';
