@@ -84,6 +84,8 @@ function pressFormSubmit(e) {
     }, { merge: true })
       .then((docRef) => {
       const press_image = document.getElementById('press_image');
+      console.log('file init cropper ' + press_image.files[0]);
+      console.log('file size init cropper ' + press_image.files[0].size);
       if (press_image.files.length > 0) {
         const storageRef = ref(storage, `profiles/${docRef.id}`);
         pressUploadImage(docRef.id, storageRef, press_image);
@@ -118,6 +120,7 @@ const hiddenPressInput = document.getElementById('hidden_press_img');
 const press_crop_modal = document.getElementById("crop_modal");
 let press_cropper;
 let imageLoaded = false;
+let imageFile;
 
 function handlePressPic(e) {
   e.preventDefault();
@@ -171,6 +174,7 @@ function handlePressPic(e) {
 
     console.log('file after cropper ' + press_image.files[0]);
     console.log('file size after cropper ' + press_image.files[0].size);
+    imageFile = press_image.files[0];
 
     // Auto close the cropper
     const isMobile = window.innerWidth <= 800;
@@ -251,7 +255,7 @@ async function pressUploadImage(docId, storageRef) {
       if (!blob) {
         console.error('Failed to generate Blob object.');
         console.log('Using raw file instead');
-        fileToUpload = press_image.files[0];// file;
+        fileToUpload = imageFile;// file;
       } else {
         fileToUpload = blob;
         console.log('Using blob to upload');
