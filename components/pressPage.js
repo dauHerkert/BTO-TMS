@@ -169,6 +169,9 @@ function handlePressPic(e) {
       });
     };
 
+    console.log('file after cropper ' + press_image.files[0]);
+    console.log('file size after cropper ' + press_image.files[0].size);
+
     // Auto close the cropper
     const isMobile = window.innerWidth <= 800;
     if (isMobile) {
