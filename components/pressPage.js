@@ -243,6 +243,7 @@ async function pressUploadImage(docId, storageRef) {
 
   if (press_cropper && press_cropper.getCroppedCanvas()) {
     const canvas = press_cropper.getCroppedCanvas();
+    console.log('canvas:', canvas);
     canvas.toBlob((blob) => {
       let fileToUpload;
       if (!blob) {
@@ -256,8 +257,8 @@ async function pressUploadImage(docId, storageRef) {
 
       console.log('fileToUpload', fileToUpload);
 
-      //const imageSize = blob.size; // Size of the image in bytes
-      //console.log('Image Size:', imageSize);
+      const imageSize = blob.size; // Size of the image in bytes
+      console.log('Image Size:', imageSize);
 
       uploadBytes(storageRef, fileToUpload, metadata)
         .then((snapshot) => {
