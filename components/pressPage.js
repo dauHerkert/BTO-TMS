@@ -70,6 +70,7 @@ function pressFormSubmit(e) {
       //press_hotel_info: press_hotel_info.value,
       press_card_number: escapeHtml(press_card_number.value),
       press_issuing_institution: escapeHtml(press_issuing_institution.value),
+      press_user_created: new Date(),
       press_form_user: true,
       user_company: PRESSCOMPANYID,
       user_firstcompany: PRESSCOMPANYID,
