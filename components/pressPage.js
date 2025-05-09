@@ -246,22 +246,22 @@ async function pressUploadImage(docId, storageRef) {
 
   if (press_cropper && press_cropper.getCroppedCanvas()) {
     const canvas = press_cropper.getCroppedCanvas();
-    console.log('canvas:', canvas);
     canvas.toBlob((blob) => {
       let fileToUpload;
       if (!blob) {
         console.error('Failed to generate Blob object.');
         console.log('Using raw file instead');
-        fileToUpload = file;
+        fileToUpload = press_image.files[0];// file;
       } else {
         fileToUpload = blob;
         console.log('Using blob to upload');
+        console.log('Image Size:', blob.size);
       }
 
       console.log('fileToUpload', fileToUpload);
 
-      const imageSize = blob.size; // Size of the image in bytes
-      console.log('Image Size:', imageSize);
+      //const imageSize = blob.size; // Size of the image in bytes
+      //console.log('Image Size:', imageSize);
 
       uploadBytes(storageRef, fileToUpload, metadata)
         .then((snapshot) => {
