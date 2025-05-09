@@ -321,7 +321,7 @@ if(window.location.pathname == '/en/forgoten-password' || window.location.pathna
 
 if (window.location.pathname.substring(window.location.pathname.lastIndexOf('/') + 1) == 'success-email-sent') {
   let forgot_password_email = localStorage.getItem('email');
-  document.getElementById('email_confirmation_text').innerText = 'We sent a password reset link to ';
+  //document.getElementById('email_confirmation_text').innerText = 'We sent a password reset link to ';
   let localEmail = document.createElement('strong');
   localEmail.innerText = forgot_password_email;
   document.getElementById('email_confirmation_text').appendChild(localEmail);
