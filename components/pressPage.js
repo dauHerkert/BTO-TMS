@@ -171,7 +171,7 @@ function handlePressPic(e) {
     // Auto close the cropper
     const isMobile = window.innerWidth <= 800;
     if (isMobile) {
-      press_crop_modal.style.display = "none";
+      //press_crop_modal.style.display = "none";
     }
   } else {
     toastr.error('Please choose an image file.');
