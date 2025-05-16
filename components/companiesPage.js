@@ -78,6 +78,16 @@ export async function pageCompaniesTable(user){
   let link_lang = 'en';
   let userInfo = await getUserInfo(user);
   let adminInfo = await getAdminInfo(user);
+  const companyNames = await changefirstCompanyNameToID(userInfo);
+  userInfo.user_company_name = companyNames;
+
+  if (userInfo.user_company_name == undefined) {
+    document.getElementById("company_name").innerText = 'No company';
+  } else {
+    const companies = userInfo.user_company_name.split(",");
+    const firstCompany = companies[0];
+    document.getElementById("company_name").innerText = `${firstCompany}`;
+  }
 
   if (storedLang && storedLang === 'de') {
     companyProfileLabel = 'FIRMA';
@@ -475,14 +485,6 @@ export async function pageCompaniesTable(user){
       }
     });
 
-    if (userInfo.user_company_name == undefined) {
-      document.getElementById("company_name").innerText = 'No company';
-    } else {
-      const companies = userInfo.user_company_name.split(",");
-      const firstCompany = companies[0];
-      document.getElementById("company_name").innerText = `${firstCompany}`;
-    }
-
     // Update the selectedUserZonesString variable whenever the zones select element changes
     newCompanyZones.addEventListener('change', () => {
       updateCompanyZonesString();
@@ -552,6 +554,27 @@ export async function pageCompaniesTable(user){
         }
       })();
     })
+  }
+}
+
+async function changefirstCompanyNameToID(user) {
+  if (!user.user_firstcompany || user.user_firstcompany.trim() === "") {
+    console.log("User does not have a user_company");
+    return "No company"; // Puedes devolver cualquier valor predeterminado que necesites aquí
+  }
+
+  const companiesRef = collection(db, "companies");
+  const companiesSnapshot = await getDocs(companiesRef);
+  let companyNames = [];
+  for (const company of companiesSnapshot.docs) {
+    if (user.user_firstcompany.includes(company.id)) {
+      companyNames.push(company.data().company_name);
+    }
+  }
+  if (companyNames.length > 0) {
+    return companyNames.join(", ");
+  } else {
+    console.log("No company found with that ID");
   }
 }
 
