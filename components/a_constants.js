@@ -103,10 +103,12 @@
   //export const IMAGE_LOGO_2 = '646cfb750cadf08ca3047b91_Color%3DDefault%20(1).png';
 
  /* ASSETS - Images - used in email templates */
- export const firstImageURL = "https://cdn.prod.website-files.com/68010117e67f664fd33de186/68118591861fe7c407eebac3_BTO.png";
+ //export const firstImageURL = "https://cdn.prod.website-files.com/68010117e67f664fd33de186/68118591861fe7c407eebac3_BTO.png";
+ export const firstImageURL = "https://cdn.prod.website-files.com/68010117e67f664fd33de186/6836271c97fc3234148e4658_BER25_LOGO-HYLO_RGB-02.png";
  export const firstImageStyle = "max-height: 90px;width: auto;max-width: 220px;";
 
- export const secondImageURL = "https://cdn.prod.website-files.com/68010117e67f664fd33de186/68010117e67f664fd33de297_WTA_Logo_WTA500_CMYK_Black.png";
+ //export const secondImageURL = "https://cdn.prod.website-files.com/68010117e67f664fd33de186/68010117e67f664fd33de297_WTA_Logo_WTA500_CMYK_Black.png";
+ export const secondImageURL = "https://cdn.prod.website-files.com/68010117e67f664fd33de186/6836271594621bf99c6c7538_wta500.png";
  export const secondImageStyle = "max-height: 100px;width: 70%;max-width: 150px;";
 
 
