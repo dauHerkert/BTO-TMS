@@ -306,31 +306,26 @@ async function setDefaultFields(user) {
     await updateDoc(userRef, { profileImagePath: newImagePath });
     
 
-    // Sign up
-    (async () => {
-      try {
-        const stored_userID = `${userID}`;
-        const html = await fetch(register_email_url)
-          .then(response => response.text())
-          .then(html => html.replaceAll('${fullName}', fullNameDisplay))
-          .then(html => html.replace('${firstImageURL}', firstImageURL))
-          .then(html => html.replace('${firstImageStyle}', firstImageStyle))
-          .then(html => html.replace('${secondImageURL}', secondImageURL))
-          .then(html => html.replace('${secondImageStyle}', secondImageStyle))
-          .then(html => html.replaceAll('${urlEN}', (URLENV + '/en' + URLSIGNIN)))
-          .then(html => html.replaceAll('${urlDE}', (URLENV + '/de' + URLSIGNIN)))
-          .then(html => html.replaceAll('${userID}', stored_userID));
-        const docRef = addDoc(collection(db, "mail"), {
-          to: [`${user.email}`],
-          message: {
-            subject: register_email_subject,
-            html: html,
-          }
-        });
-      } catch (error) {
-        console.error(error);
+    // Sign up email
+    const stored_userID = `${userID}`;
+    const html = await fetch(register_email_url)
+      .then(response => response.text())
+      .then(html => html.replaceAll('${fullName}', fullNameDisplay))
+      .then(html => html.replace('${firstImageURL}', firstImageURL))
+      .then(html => html.replace('${firstImageStyle}', firstImageStyle))
+      .then(html => html.replace('${secondImageURL}', secondImageURL))
+      .then(html => html.replace('${secondImageStyle}', secondImageStyle))
+      .then(html => html.replaceAll('${urlEN}', (URLENV + '/en' + URLSIGNIN)))
+      .then(html => html.replaceAll('${urlDE}', (URLENV + '/de' + URLSIGNIN)))
+      .then(html => html.replaceAll('${userID}', stored_userID));
+    const mailDocRef = await addDoc(collection(db, "mail"), {
+      to: [`${user.email}`],
+      message: {
+        subject: register_email_subject,
+        html: html,
       }
-    })();
+    });
+    console.log('Register email queued:', mailDocRef.id);
 
     if (companyProfile == 'No company') {
       toastr.success('You are signing up with no company set');
