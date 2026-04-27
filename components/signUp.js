@@ -107,6 +107,45 @@ const signupOverlayMessages = {
   en: 'Registering your account. Please wait...',
   de: 'Ihre Registrierung wird verarbeitet. Bitte warten...',
 };
+const SIGNUP_DEBUG_VERSION = 'signup-mail-debug-2026-04-27-2';
+const SIGNUP_DEBUG_STORAGE_KEY = 'signup_debug_trace';
+
+function signupDebugLog(message, data = null) {
+  const payload = {
+    at: new Date().toISOString(),
+    message,
+    data,
+  };
+
+  console.log(`[signup] ${message}`, data || '');
+
+  try {
+    const currentTrace = JSON.parse(sessionStorage.getItem(SIGNUP_DEBUG_STORAGE_KEY) || '[]');
+    currentTrace.push(payload);
+    sessionStorage.setItem(SIGNUP_DEBUG_STORAGE_KEY, JSON.stringify(currentTrace.slice(-30)));
+  } catch (error) {
+    console.log('[signup] Could not write debug trace', error);
+  }
+}
+
+function printStoredSignupDebugTrace() {
+  try {
+    const currentTrace = JSON.parse(sessionStorage.getItem(SIGNUP_DEBUG_STORAGE_KEY) || '[]');
+    if (!currentTrace.length) {
+      return;
+    }
+
+    console.group('[signup] Previous registration trace');
+    currentTrace.forEach((entry) => {
+      console.log(`${entry.at} - ${entry.message}`, entry.data || '');
+    });
+    console.groupEnd();
+  } catch (error) {
+    console.log('[signup] Could not read debug trace', error);
+  }
+}
+
+printStoredSignupDebugTrace();
 
 function getSignupOverlayMessage() {
   const storedLang = localStorage.getItem("language");
@@ -213,6 +252,11 @@ function generateTempId() {
 }
 
 async function setDefaultFields(user) {
+  signupDebugLog('setDefaultFields started', {
+    version: SIGNUP_DEBUG_VERSION,
+    userId: user.uid,
+    email: user.email,
+  });
   const userRef = doc(db, 'users', user.uid);
   ///await updateDoc(userRef, { user_company: newUserCompaniesString });
   // Use the `getCompanyType` function to get the company type and zones
@@ -280,7 +324,7 @@ async function setDefaultFields(user) {
   sessionStorage.setItem('user_email', user.email);
   sessionStorage.setItem('userID', user.uid);
   // Use the setDoc function to set the userDefaultValues object
-  setDoc(userRef, userDefaultValues, { merge: true })
+  return setDoc(userRef, userDefaultValues, { merge: true })
     .then(async () => {
     await userUploadImage(user, tempImageId, hiddenProfileInput, fileItem);
     const oldImagePath = `profiles/${tempImageId}`;
@@ -307,6 +351,10 @@ async function setDefaultFields(user) {
     
 
     // Sign up email
+    signupDebugLog('Register email enqueue started', {
+      email: user.email,
+      templateUrl: register_email_url,
+    });
     const stored_userID = `${userID}`;
     const html = await fetch(register_email_url)
       .then(response => response.text())
@@ -325,7 +373,10 @@ async function setDefaultFields(user) {
         html: html,
       }
     });
-    console.log('Register email queued:', mailDocRef.id);
+    signupDebugLog('Register email queued', {
+      mailDocId: mailDocRef.id,
+      email: user.email,
+    });
 
     if (companyProfile == 'No company') {
       toastr.success('You are signing up with no company set');
@@ -339,7 +390,10 @@ async function setDefaultFields(user) {
   })
   .catch((err) => {
       hideSignupOverlay();
-      console.log('there was a problem updating the data', err);
+      signupDebugLog('Registration data or email step failed', {
+        message: err.message,
+        code: err.code,
+      });
       toastr.error('There was an error updating your info');
   });
 };
@@ -353,6 +407,10 @@ async function setDefaultFields(user) {
 function handleSignUp(e) {
   e.preventDefault();
   e.stopPropagation();
+  sessionStorage.removeItem(SIGNUP_DEBUG_STORAGE_KEY);
+  signupDebugLog('signup submit handled', {
+    version: SIGNUP_DEBUG_VERSION,
+  });
   const email = document.getElementById('signup-email').value;
   const password = document.getElementById('signup-password').value;
   var confirm_password = document.getElementById("password-confirm").value;
@@ -365,11 +423,11 @@ function handleSignUp(e) {
     if (password == confirm_password) {
       showSignupOverlay();
       createUserWithEmailAndPassword(auth, escapeHtml(email), password)
-        .then(userCredential => {
+        .then(async userCredential => {
           // Signed in
           const user = userCredential.user;
           sessionStorage.setItem('userID', user.uid);
-          setDefaultFields(user);
+          await setDefaultFields(user);
           console.log('Go to userExtraInfo()');
           userExtraInfo(e, user);
           toastr.success('user successfully created: ' + user.email);
@@ -378,7 +436,18 @@ function handleSignUp(e) {
           hideSignupOverlay();
           const errorCode = error.code;
           const errorMessage = error.message;
-          console.log('errorCode: errorMessage', errorCode, ': ', errorMessage);
+          signupDebugLog('signup catch triggered', {
+            code: errorCode,
+            message: errorMessage,
+          });
+          if (!errorCode || !errorCode.startsWith('auth/')) {
+            if (storedLang && storedLang === 'de') {
+              toastr.error('Die Registrierung wurde erstellt, aber es gab ein Problem beim Speichern oder Versenden der E-Mail.');
+            } else {
+              toastr.error('The account was created, but there was a problem saving the data or sending the email.');
+            }
+            return;
+          }
           if (storedLang && storedLang === 'de') {
             if (errorCode == 'auth/invalid-email') {
               toastr.error('Ungültiges E-Mail-Format, bitte überprüfen Sie, ob es ein @ und eine gültige Domänenerweiterung (z. B. .com, .net) enthält.'); 
