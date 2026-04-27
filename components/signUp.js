@@ -101,6 +101,112 @@ if (fileName) {
 }
 
 const uploading_image = document.getElementById('uploading_image');
+const SIGNUP_OVERLAY_ID = 'signup_registration_overlay';
+const SIGNUP_OVERLAY_STYLE_ID = 'signup_registration_overlay_styles';
+const signupOverlayMessages = {
+  en: 'Registering your account. Please wait...',
+  de: 'Ihre Registrierung wird verarbeitet. Bitte warten...',
+};
+
+function getSignupOverlayMessage() {
+  const storedLang = localStorage.getItem("language");
+  return storedLang === 'de' ? signupOverlayMessages.de : signupOverlayMessages.en;
+}
+
+function ensureSignupOverlayStyles() {
+  if (document.getElementById(SIGNUP_OVERLAY_STYLE_ID)) {
+    return;
+  }
+
+  const style = document.createElement('style');
+  style.id = SIGNUP_OVERLAY_STYLE_ID;
+  style.textContent = `
+    #${SIGNUP_OVERLAY_ID} {
+      position: fixed;
+      inset: 0;
+      z-index: 2147483647;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      background: rgba(255, 255, 255, 0.86);
+      cursor: wait;
+    }
+
+    #${SIGNUP_OVERLAY_ID}.is-visible {
+      display: flex;
+    }
+
+    #${SIGNUP_OVERLAY_ID} .signup-registration-overlay__message {
+      max-width: 420px;
+      width: 100%;
+      padding: 24px;
+      border-radius: 8px;
+      background: #ffffff;
+      box-shadow: 0 18px 48px rgba(0, 0, 0, 0.18);
+      color: #1f1f1f;
+      font-family: inherit;
+      font-size: 18px;
+      font-weight: 600;
+      line-height: 1.4;
+      text-align: center;
+    }
+
+    body.signup-registration-is-blocked {
+      overflow: hidden;
+    }
+  `;
+  document.head.appendChild(style);
+}
+
+function getSignupOverlay() {
+  let overlay = document.getElementById(SIGNUP_OVERLAY_ID);
+  if (overlay) {
+    return overlay;
+  }
+
+  ensureSignupOverlayStyles();
+  overlay = document.createElement('div');
+  overlay.id = SIGNUP_OVERLAY_ID;
+  overlay.setAttribute('role', 'alert');
+  overlay.setAttribute('aria-live', 'assertive');
+  overlay.setAttribute('aria-busy', 'true');
+  overlay.innerHTML = '<div class="signup-registration-overlay__message"></div>';
+  document.body.appendChild(overlay);
+  return overlay;
+}
+
+function showSignupOverlay() {
+  const overlay = getSignupOverlay();
+  const message = overlay.querySelector('.signup-registration-overlay__message');
+  const signupButton = document.getElementById('signup_button');
+
+  if (message) {
+    message.textContent = getSignupOverlayMessage();
+  }
+  overlay.classList.add('is-visible');
+  document.body.classList.add('signup-registration-is-blocked');
+
+  if (signupButton) {
+    signupButton.disabled = true;
+    signupButton.setAttribute('aria-busy', 'true');
+  }
+}
+
+function hideSignupOverlay() {
+  const overlay = document.getElementById(SIGNUP_OVERLAY_ID);
+  const signupButton = document.getElementById('signup_button');
+
+  if (overlay) {
+    overlay.classList.remove('is-visible');
+  }
+  document.body.classList.remove('signup-registration-is-blocked');
+
+  if (signupButton) {
+    signupButton.disabled = false;
+    signupButton.removeAttribute('aria-busy');
+  }
+}
 
 function generateTempId() {
   return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
@@ -237,6 +343,7 @@ async function setDefaultFields(user) {
     }, 1000);
   })
   .catch((err) => {
+      hideSignupOverlay();
       console.log('there was a problem updating the data', err);
       toastr.error('There was an error updating your info');
   });
@@ -261,6 +368,7 @@ function handleSignUp(e) {
     toastr.error('Please upload your profile picture')
   } else {
     if (password == confirm_password) {
+      showSignupOverlay();
       createUserWithEmailAndPassword(auth, escapeHtml(email), password)
         .then(userCredential => {
           // Signed in
@@ -272,6 +380,7 @@ function handleSignUp(e) {
           toastr.success('user successfully created: ' + user.email);
         })
         .catch((error) => {
+          hideSignupOverlay();
           const errorCode = error.code;
           const errorMessage = error.message;
           console.log('errorCode: errorMessage', errorCode, ': ', errorMessage);
@@ -294,6 +403,7 @@ function handleSignUp(e) {
           }
         });
     } else {
+      hideSignupOverlay();
       toastr.error('Password confirmation does not match');
     }
   }
@@ -581,7 +691,7 @@ export function signUpPage() {
   //identify auth action forms
   let signUpForm = document.getElementById('wf-form-signup-form');
   //assign event listeners
-  if ( typeof(signUpForm) !== null ) {
+  if (signUpForm) {
     signUpForm.addEventListener('submit', handleSignUp, true);
   }
   //getDateSignUp()
