@@ -107,45 +107,6 @@ const signupOverlayMessages = {
   en: 'Registering your account. Please wait...',
   de: 'Ihre Registrierung wird verarbeitet. Bitte warten...',
 };
-const SIGNUP_DEBUG_VERSION = 'signup-mail-debug-2026-04-27-2';
-const SIGNUP_DEBUG_STORAGE_KEY = 'signup_debug_trace';
-
-function signupDebugLog(message, data = null) {
-  const payload = {
-    at: new Date().toISOString(),
-    message,
-    data,
-  };
-
-  console.log(`[signup] ${message}`, data || '');
-
-  try {
-    const currentTrace = JSON.parse(sessionStorage.getItem(SIGNUP_DEBUG_STORAGE_KEY) || '[]');
-    currentTrace.push(payload);
-    sessionStorage.setItem(SIGNUP_DEBUG_STORAGE_KEY, JSON.stringify(currentTrace.slice(-30)));
-  } catch (error) {
-    console.log('[signup] Could not write debug trace', error);
-  }
-}
-
-function printStoredSignupDebugTrace() {
-  try {
-    const currentTrace = JSON.parse(sessionStorage.getItem(SIGNUP_DEBUG_STORAGE_KEY) || '[]');
-    if (!currentTrace.length) {
-      return;
-    }
-
-    console.group('[signup] Previous registration trace');
-    currentTrace.forEach((entry) => {
-      console.log(`${entry.at} - ${entry.message}`, entry.data || '');
-    });
-    console.groupEnd();
-  } catch (error) {
-    console.log('[signup] Could not read debug trace', error);
-  }
-}
-
-printStoredSignupDebugTrace();
 
 function getSignupOverlayMessage() {
   const storedLang = localStorage.getItem("language");
@@ -252,11 +213,6 @@ function generateTempId() {
 }
 
 async function setDefaultFields(user) {
-  signupDebugLog('setDefaultFields started', {
-    version: SIGNUP_DEBUG_VERSION,
-    userId: user.uid,
-    email: user.email,
-  });
   const userRef = doc(db, 'users', user.uid);
   ///await updateDoc(userRef, { user_company: newUserCompaniesString });
   // Use the `getCompanyType` function to get the company type and zones
@@ -351,10 +307,6 @@ async function setDefaultFields(user) {
     
 
     // Sign up email
-    signupDebugLog('Register email enqueue started', {
-      email: user.email,
-      templateUrl: register_email_url,
-    });
     const stored_userID = `${userID}`;
     const html = await fetch(register_email_url)
       .then(response => response.text())
@@ -373,10 +325,7 @@ async function setDefaultFields(user) {
         html: html,
       }
     });
-    signupDebugLog('Register email queued', {
-      mailDocId: mailDocRef.id,
-      email: user.email,
-    });
+    console.log('Register email queued:', mailDocRef.id);
 
     if (companyProfile == 'No company') {
       toastr.success('You are signing up with no company set');
@@ -390,10 +339,7 @@ async function setDefaultFields(user) {
   })
   .catch((err) => {
       hideSignupOverlay();
-      signupDebugLog('Registration data or email step failed', {
-        message: err.message,
-        code: err.code,
-      });
+      console.log('there was a problem updating the data', err);
       toastr.error('There was an error updating your info');
   });
 };
@@ -407,10 +353,6 @@ async function setDefaultFields(user) {
 function handleSignUp(e) {
   e.preventDefault();
   e.stopPropagation();
-  sessionStorage.removeItem(SIGNUP_DEBUG_STORAGE_KEY);
-  signupDebugLog('signup submit handled', {
-    version: SIGNUP_DEBUG_VERSION,
-  });
   const email = document.getElementById('signup-email').value;
   const password = document.getElementById('signup-password').value;
   var confirm_password = document.getElementById("password-confirm").value;
@@ -436,10 +378,7 @@ function handleSignUp(e) {
           hideSignupOverlay();
           const errorCode = error.code;
           const errorMessage = error.message;
-          signupDebugLog('signup catch triggered', {
-            code: errorCode,
-            message: errorMessage,
-          });
+          console.log('errorCode: errorMessage', errorCode, ': ', errorMessage);
           if (!errorCode || !errorCode.startsWith('auth/')) {
             if (storedLang && storedLang === 'de') {
               toastr.error('Die Registrierung wurde erstellt, aber es gab ein Problem beim Speichern oder Versenden der E-Mail.');
