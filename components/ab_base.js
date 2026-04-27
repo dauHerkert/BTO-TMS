@@ -345,7 +345,9 @@ onAuthStateChanged(auth, (user) => {
     // user is signed in
     //console.log(`The current user's UID is equal to ${user.uid}`);
     dispatchRequest(user);
-    populateForms(user);
+    if (url.substring(url.lastIndexOf('/') + 1) != 'signup-bto' && url.substring(url.lastIndexOf('/') + 1) != 'signup-form-submitted') {
+      populateForms(user);
+    }
     showPrivateElements();
 
   } else {

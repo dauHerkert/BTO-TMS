@@ -2,7 +2,7 @@ import { DEFAULTCOMPANYID, EVENTDATES, URLEMAILTEMPLATES, URLENV, URLSIGNIN, fir
 import {doc,getDoc,setDoc,updateDoc,addDoc,collection,getDocs,ref,getDownloadURL,uploadBytes,deleteObject,createUserWithEmailAndPassword,auth,storage,db, user} from './a_firebaseConfig';
 import Cropper from 'cropperjs';
 import toastr from 'toastr';
-import { getUserInfo, escapeHtml } from './ab_base';
+import { escapeHtml } from './ab_base';
 import 'select2';
 import 'select2/dist/css/select2.min.css';
 
@@ -68,16 +68,14 @@ const userDefaultValues = {
  * default values are used.
 =========================================================================================================================================================*/
 
-async function getCompanyType(user) {
-  let userInfo = await getUserInfo(user);
-  console.log('userInfo:', userInfo);
+async function getCompanyType(userCompanyId) {
   const companiesRef = collection(db, "companies");
   const companiesSnapshot = await getDocs(companiesRef);
   let companyProfile = 'No company';
   let companyZones = [];
 
   for (const company of companiesSnapshot.docs) {
-    if (company.id === userInfo.user_company) {
+    if (company.id === userCompanyId) {
       companyProfile = company.data().company_profile;
       companyZones = company.data().company_zones || [];
       break;
@@ -214,9 +212,6 @@ function generateTempId() {
 
 async function setDefaultFields(user) {
   const userRef = doc(db, 'users', user.uid);
-  ///await updateDoc(userRef, { user_company: newUserCompaniesString });
-  // Use the `getCompanyType` function to get the company type and zones
-  const { companyProfile, companyZones } = await getCompanyType(user);
   const userDoc = await getDoc(userRef);
   const user_firstname = document.getElementById('first-name');
   const user_lastname = document.getElementById('last-name');
@@ -228,6 +223,8 @@ async function setDefaultFields(user) {
   let fileItem = profile_img.files[0];
   let storedLang = localStorage.getItem("language");
   const special_requests = document.getElementById('special_requests');
+  const userCompanyValue = (currentUrl.searchParams.has('company') && currentUrl.searchParams.get('company') != "null") ? currentUrl.searchParams.get('company') : select_company.value;
+  const { companyProfile, companyZones } = await getCompanyType(userCompanyValue);
 
   if (user_firstname.value && user_lastname.value) {
     userDefaultValues.user_fullname = (escapeHtml(user_firstname.value) + escapeHtml(user_lastname.value)).toLowerCase().replace(/\s/g, '');
@@ -242,6 +239,8 @@ async function setDefaultFields(user) {
   userDefaultValues.user_id = user.uid;
   // Use the companyZones variable to set the user_zones field
   userDefaultValues.user_zones = companyZones;
+  userDefaultValues.user_company = userCompanyValue;
+  userDefaultValues.user_firstcompany = userCompanyValue;
   const admin_checkbox = jQuery('#admin_checkbox').val();
   var company_admin_petition;
   if ( $("#admin_checkbox").is( ":checked" ) ){
@@ -267,12 +266,6 @@ async function setDefaultFields(user) {
   }
 
   let fullNameDisplay = `${user_firstname.value} ${user_lastname.value}`;
-  let urlCompany = new URL(window.location.href);
-  if (urlCompany.searchParams.has('company')){
-    userDefaultValues.user_company = currentUrl.searchParams.get('company');
-    userDefaultValues.user_firstcompany = currentUrl.searchParams.get('company');
-  }
-
 
   //Save the user info in case he wants to resend the email
   sessionStorage.setItem('user_firstname', user_firstname.value);
