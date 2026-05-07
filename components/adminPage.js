@@ -450,7 +450,6 @@ export async function pageAdmin(user) {
     * This code snippet remembers the current filters and pagenumber the user is on in session storage
     * and will reapply those settings on pageload. This is a workaround to prevent users from clicking
     * to the same page over and over when editing users.
-    * 2025-02-28: tf
     ================================================================================================*/
     const STORE_SESSION_ADMIN_TABLE_FILTERS_KEY = 'adminTableHeaderFilters';
     const STORE_SESSION_ADMIN_TABLE_PAGE_NUMBER = 'adminTablePageno';

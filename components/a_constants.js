@@ -7,9 +7,9 @@
 
  /* Authorized event dates */
  export const EVENTDATES = {
-  MINDATE_DAY: 11,
+  MINDATE_DAY: 13,
   MINDATE_MONTH: 6,
-  MAXDATE_DAY: 22,
+  MAXDATE_DAY: 21,
   MAXDATE_MONTH: 6
  }
  
@@ -25,8 +25,8 @@
  export const URLSIGNUP = '/signup' + PSNAME;
 
  /* Admin create user default dates */
- export const SUPPLIERSTARTDATE = '06-11-2025'; //'04-09-2025';
- export const SUPPLIERENDDATE = '06-22-2025'; //'04-21-2025';
+ export const SUPPLIERSTARTDATE = '06-13-2026';
+ export const SUPPLIERENDDATE = '06-21-2026';
 
  /**/
  export const DEFAULTCOMPANYID = 'vbIh3G2eLIOVEvXmKDKf'; // Not in Use
