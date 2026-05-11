@@ -1,4 +1,4 @@
-import { PRESSCOMPANYID, PRESSCOMPANYPROFILE, PRESSCOMPANYZONES, DEVEMAIL, URLEMAILTEMPLATES, firstImageURL, firstImageStyle, secondImageURL, secondImageStyle } from './a_constants';
+import { PRESSCOMPANYID, PRESSCOMPANYPROFILE, PRESSCOMPANYZONES, DEVEMAIL, URLEMAILTEMPLATES, firstImageURL, firstImageStyle } from './a_constants';
 import { addDoc, collection, ref, uploadBytes, db, storage, user } from './a_firebaseConfig';
 import { escapeHtml } from './ab_base';
 import Cropper from 'cropperjs';
@@ -284,8 +284,6 @@ async function pressUploadImage(docId, storageRef) {
                 .then(html => html.replace('${fullName}', fullNameDisplay))
                 .then(html => html.replace('${firstImageURL}', firstImageURL))
                 .then(html => html.replace('${firstImageStyle}', firstImageStyle))
-                .then(html => html.replace('${secondImageURL}', secondImageURL))
-                .then(html => html.replace('${secondImageStyle}', secondImageStyle));
               const docRef = addDoc(collection(db, "mail"), {
                 to: DEVEMAIL,
                 message: {
@@ -305,8 +303,6 @@ async function pressUploadImage(docId, storageRef) {
                 .then(html => html.replace('${fullName}', lastNameDisplay))
                 .then(html => html.replace('${firstImageURL}', firstImageURL))
                 .then(html => html.replace('${firstImageStyle}', firstImageStyle))
-                .then(html => html.replace('${secondImageURL}', secondImageURL))
-                .then(html => html.replace('${secondImageStyle}', secondImageStyle));
               const docRef = addDoc(collection(db, "mail"), {
                 to: `${press_email.value}`,
                 message: {

@@ -1,4 +1,4 @@
-import { DEFAULTCOMPANYID, EVENTDATES, URLEMAILTEMPLATES, URLENV, URLSIGNIN, firstImageURL, firstImageStyle, secondImageURL, secondImageStyle } from './a_constants';
+import { DEFAULTCOMPANYID, EVENTDATES, URLEMAILTEMPLATES, URLENV, URLSIGNIN, firstImageURL, firstImageStyle } from './a_constants';
 import {doc,getDoc,setDoc,updateDoc,addDoc,collection,getDocs,ref,getDownloadURL,uploadBytes,deleteObject,createUserWithEmailAndPassword,auth,storage,db, user} from './a_firebaseConfig';
 import Cropper from 'cropperjs';
 import toastr from 'toastr';
@@ -306,8 +306,6 @@ async function setDefaultFields(user) {
       .then(html => html.replaceAll('${fullName}', fullNameDisplay))
       .then(html => html.replace('${firstImageURL}', firstImageURL))
       .then(html => html.replace('${firstImageStyle}', firstImageStyle))
-      .then(html => html.replace('${secondImageURL}', secondImageURL))
-      .then(html => html.replace('${secondImageStyle}', secondImageStyle))
       .then(html => html.replaceAll('${urlEN}', (URLENV + '/en' + URLSIGNIN)))
       .then(html => html.replaceAll('${urlDE}', (URLENV + '/de' + URLSIGNIN)))
       .then(html => html.replaceAll('${userID}', stored_userID));

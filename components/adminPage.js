@@ -1,4 +1,4 @@
-import { SUPPLIERSTARTDATE, SUPPLIERENDDATE, EVENTDATES,  URLEMAILTEMPLATES, URLASSETS, ICON_PENCIL, ICON_TRASH, IMAGE_PROFILE, firstImageURL, firstImageStyle, secondImageURL, secondImageStyle } from './a_constants';
+import { SUPPLIERSTARTDATE, SUPPLIERENDDATE, EVENTDATES,  URLEMAILTEMPLATES, URLASSETS, ICON_PENCIL, ICON_TRASH, IMAGE_PROFILE, firstImageURL, firstImageStyle } from './a_constants';
 import { doc, db, collection, query, getDocs, getDoc, deleteDoc, setDoc, ref, getDownloadURL, addDoc, uploadBytes, storage, user } from './a_firebaseConfig';
 import { getUserInfo, getAdminInfo, getAdminData, createOptions, changeAdminTypeTitle, escapeHtml } from './ab_base';
 import Cropper from 'cropperjs';
@@ -1278,8 +1278,6 @@ export async function pageAdmin(user) {
                     .then(html => html.replaceAll('${fullName}', nameToDisplay))
                     .then(html => html.replace('${firstImageURL}', firstImageURL))
                     .then(html => html.replace('${firstImageStyle}', firstImageStyle))
-                    .then(html => html.replace('${secondImageURL}', secondImageURL))
-                    .then(html => html.replace('${secondImageStyle}', secondImageStyle));
                   const docRef = addDoc(collection(db, "mail"), {
                     to: [`${user_specific_email.value}`],
                     message: {
@@ -1529,8 +1527,6 @@ export async function pageAdmin(user) {
                     .then(html => html.replaceAll('${fullName}', nameToDisplay))
                     .then(html => html.replace('${firstImageURL}', firstImageURL))
                     .then(html => html.replace('${firstImageStyle}', firstImageStyle))
-                    .then(html => html.replace('${secondImageURL}', secondImageURL))
-                    .then(html => html.replace('${secondImageStyle}', secondImageStyle));
                   const docRef = addDoc(collection(db, "mail"), {
                     to: [`${userData.data().user_email}`],
                     message: {

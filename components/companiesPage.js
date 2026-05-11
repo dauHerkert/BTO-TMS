@@ -1,4 +1,4 @@
-import { URLENV, URLSIGNUP, URLSIGNIN, URLEMAILTEMPLATES, URLASSETS, ICON_PENCIL, ICON_TRASH, ICON_SENDMAIL, firstImageURL, firstImageStyle, secondImageURL, secondImageStyle } from './a_constants';
+import { URLENV, URLSIGNUP, URLSIGNIN, URLEMAILTEMPLATES, URLASSETS, ICON_PENCIL, ICON_TRASH, ICON_SENDMAIL, firstImageURL, firstImageStyle } from './a_constants';
 import { collection, doc, getDocs, getDoc, setDoc, addDoc, updateDoc, query, where, db, storage, user } from './a_firebaseConfig';
 import { getUserInfo, getAdminInfo, createOptions, changeAdminTypeTitle, escapeHtml, escapeHtmlLess } from './ab_base';
 import toastr from 'toastr';
@@ -535,8 +535,6 @@ export async function pageCompaniesTable(user){
             .then(html => html.replace('${registrationLinkDe}', company_link_de.value))
             .then(html => html.replace('${firstImageURL}', firstImageURL))
             .then(html => html.replace('${firstImageStyle}', firstImageStyle))
-            .then(html => html.replace('${secondImageURL}', secondImageURL))
-            .then(html => html.replace('${secondImageStyle}', secondImageStyle));
           const docRef = addDoc(collection(db, "mail"), {
             to: `${email_to_send.value}`,
             message: {

@@ -1,4 +1,4 @@
-import { DEVEMAIL, EVENTDATES, URLEMAILTEMPLATES } from './a_constants';
+import { DEVEMAIL, EVENTDATES, URLEMAILTEMPLATES, firstImageURL, firstImageStyle } from './a_constants';
 import { doc, setDoc, addDoc, collection, getDownloadURL, ref, storage, db, getDocs, user } from './a_firebaseConfig';
 import { getUserInfo, createOptions } from './ab_base';
 import toastr from 'toastr';
@@ -76,8 +76,10 @@ async function addSupplierInfo(e, user) {
       try {
         const fullName = `${userDoc.user_firstname} ${userDoc.user_lastname}`;
         const html = await fetch(supplier_form_confirmation_url)
-              .then(response => response.text())
-              .then(html => html.replace('${userDoc.user_firstname} ${userDoc.user_lastname}', fullName));
+          .then(response => response.text())
+          .then(html => html.replace('${firstImageURL}', firstImageURL))
+          .then(html => html.replace('${firstImageStyle}', firstImageStyle))
+          .then(html => html.replace('${userDoc.user_firstname} ${userDoc.user_lastname}', fullName));
         const docRef = addDoc(collection(db, "mail"), {
           to: `${userDoc.user_email}`,
           message: {
@@ -202,6 +204,8 @@ if (supplier_notify_form) {
         const supplierText = `${supplier_text.value}`;
         const html = await fetch(supplier_form_changes_url)
           .then(response => response.text())
+          .then(html => html.replace('${firstImageURL}', firstImageURL))
+          .then(html => html.replace('${firstImageStyle}', firstImageStyle))
           .then(html => html.replace('${supplier_email.value}', supplierEmail))
           .then(html => html.replace('${supplier_text.value}', supplierText));
         const docRef = addDoc(collection(db, "mail"), {
