@@ -507,7 +507,7 @@ export async function pageCompaniesTable(user){
 
       let storedLang = localStorage.getItem('language');
       //Supplier form submited - EN
-      let registration_link_email_subject = 'Your accreditation for the BERLIN TENNIS OPEN 2026';
+      let registration_link_email_subject = 'Your accreditation for the VANDA Pharmaceuticals BERLIN TENNIS OPEN 2026';
       let registration_link_email_url = URLEMAILTEMPLATES.URLEMAILFOLDER + URLEMAILTEMPLATES.URLREGISTRATIONLINK_EN;
       let notification_UI_correct = 'Email has been successfully sent';
       let notification_UI_error = 'Error sending email: ';
@@ -518,7 +518,7 @@ export async function pageCompaniesTable(user){
       
       if (storedLang && storedLang === 'de') {
         //Supplier form submited - DE
-        registration_link_email_subject = 'Ihre Akkreditierung bei den BERLIN TENNIS OPEN 2026';
+        registration_link_email_subject = 'Ihre Akkreditierung bei den VANDA Pharmaceuticals BERLIN TENNIS OPEN 2026';
         registration_link_email_url = URLEMAILTEMPLATES.URLEMAILFOLDER + URLEMAILTEMPLATES.URLREGISTRATIONLINK_DE;
         notification_UI_correct = 'E-Mail wurde erfolgreich versendet';
         notification_UI_error = 'Error beim versenden der E-Mail: ';
