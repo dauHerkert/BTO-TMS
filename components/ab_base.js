@@ -1,5 +1,5 @@
 import { URLENV, URLSIGNIN, URLASSETS, ICON_LOGOUT } from './a_constants';
-import { collection, getDocs, sendPasswordResetEmail, db, auth, doc, getDoc, onAuthStateChanged, user, getAuth } from './a_firebaseConfig';
+import { collection, getDocs, sendPasswordResetEmail, db, auth, doc, getDoc, updateDoc, onAuthStateChanged, user, getAuth } from './a_firebaseConfig';
 import { signInPage } from './signIn';
 import { signUpPage } from './signUp';
 import { pagePress } from './pressPage';
@@ -333,7 +333,7 @@ if (window.location.pathname.substring(window.location.pathname.lastIndexOf('/')
  * public elements, and exits the function.
 =======================================================================================================================================================*/
 
-onAuthStateChanged(auth, (user) => {
+onAuthStateChanged(auth, async (user) => {
   let url = window.location.pathname;
   let storedLang = localStorage.getItem('language');
   let urlLang = '/en';
@@ -344,6 +344,11 @@ onAuthStateChanged(auth, (user) => {
   if (user) {
     // user is signed in
     //console.log(`The current user's UID is equal to ${user.uid}`);
+    const userRef = doc(db, 'users', user.uid);
+    const docSnap = await getDoc(userRef);
+    if (docSnap.exists() && docSnap.data().user_status === 'OldData') {
+      await updateDoc(userRef, { user_status: 'Pending' });
+    }
     dispatchRequest(user);
     if (url.substring(url.lastIndexOf('/') + 1) != 'signup-bto' && url.substring(url.lastIndexOf('/') + 1) != 'signup-form-submitted') {
       populateForms(user);
