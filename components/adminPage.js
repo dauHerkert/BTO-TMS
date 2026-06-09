@@ -1426,8 +1426,21 @@ export async function pageAdmin(user) {
     let bulk_start_date = document.getElementById('bulk_Select-dates');
     let bulk_end_date = document.getElementById('bulk_Select-dates2');
     const bulk_send_email = document.getElementById('bulk_send_email')
-    const bulkStatusValue = bulk_status_update.value;
-    const hasBulkStatus = bulkStatusValue && bulkStatusValue !== 'Select status';
+    const normalizeBulkStatus = (statusValue) => {
+      const statusMap = {
+        'Freigegeben': 'Ok',
+        'Ausstehend': 'Pending',
+        'Abgelehnt': 'Declined',
+        'Gedruckt': 'Printed',
+        'No Status': 'NoStatus',
+        'Old Data': 'OldData',
+        'Status auswählen': '',
+        'Select status': '',
+      };
+      return statusMap[statusValue] !== undefined ? statusMap[statusValue] : statusValue;
+    };
+    const bulkStatusValue = normalizeBulkStatus(bulk_status_update.value);
+    const hasBulkStatus = !!bulkStatusValue;
     const bulkStartDateValue = bulk_start_date ? bulk_start_date.value : '';
     const bulkEndDateValue = bulk_end_date ? bulk_end_date.value : '';
 
@@ -1436,27 +1449,29 @@ export async function pageAdmin(user) {
       return;
     }
 
-    for (let i = 0; i < selectedData.length; i++) {
-      const userRef = doc(db, 'users', selectedData[i]);
-      const userData = await getDoc(userRef);
-      if (userData.exists()) {
-        const bulkUpdates = {};
+    try {
+      let lastEmailLabel = 'Users updated correctly';
 
-        if (hasBulkStatus) {
-          bulkUpdates.user_status = bulkStatusValue;
-        }
+      for (let i = 0; i < selectedData.length; i++) {
+        const userRef = doc(db, 'users', selectedData[i]);
+        const userData = await getDoc(userRef);
+        if (userData.exists()) {
+          const bulkUpdates = {};
 
-        if (bulkStartDateValue) {
-          bulkUpdates.supplier_visit_dates = escapeHtml(bulkStartDateValue);
-          bulkUpdates.supplier_start_date = escapeHtml(bulkStartDateValue);
-        }
+          if (hasBulkStatus) {
+            bulkUpdates.user_status = bulkStatusValue;
+          }
 
-        if (bulkEndDateValue) {
-          bulkUpdates.supplier_end_date = escapeHtml(bulkEndDateValue);
-        }
+          if (bulkStartDateValue) {
+            bulkUpdates.supplier_visit_dates = escapeHtml(bulkStartDateValue);
+            bulkUpdates.supplier_start_date = escapeHtml(bulkStartDateValue);
+          }
 
-        setDoc(userRef, bulkUpdates, { merge: true })
-          .then(() => {
+          if (bulkEndDateValue) {
+            bulkUpdates.supplier_end_date = escapeHtml(bulkEndDateValue);
+          }
+
+          await setDoc(userRef, bulkUpdates, { merge: true });
 
             // Applications - EN - Subjects and UI message Label
             let application_rejected_subject = 'Accreditation rejection';
@@ -1527,6 +1542,7 @@ export async function pageAdmin(user) {
               emailSubject = application_rejected_subject;
               emailLabel = application_rejected_label;
             }
+            lastEmailLabel = emailLabel;
 
             if (userData.data().account_type == "Press") {
               if (bulkStatusValue == 'Declined') {
@@ -1543,39 +1559,37 @@ export async function pageAdmin(user) {
 
             // TODO: review body modal-open
             // Application action email send
-            (async () => {
-              if (hasBulkStatus && bulk_send_email.checked && bulkStatusValue != 'Pending') {
-                try {
-                  const html = await fetch(emailURL)
-                    .then(response => response.text())
-                    .then(html => html.replaceAll('${fullName}', nameToDisplay))
-                    .then(html => html.replace('${firstImageURL}', firstImageURL))
-                    .then(html => html.replace('${firstImageStyle}', firstImageStyle))
-                  const docRef = addDoc(collection(db, "mail"), {
-                    to: [`${userData.data().user_email}`],
-                    message: {
-                      subject: emailSubject,
-                      html: html,
-                    }
-                  });
-                  console.log("Document written with ID: ", docRef.id);
-                } catch (e) {
-                  console.error("Error adding document: ", e);
-                }
+            if (hasBulkStatus && bulk_send_email.checked && bulkStatusValue != 'Pending') {
+              try {
+                const html = await fetch(emailURL)
+                  .then(response => response.text())
+                  .then(html => html.replaceAll('${fullName}', nameToDisplay))
+                  .then(html => html.replace('${firstImageURL}', firstImageURL))
+                  .then(html => html.replace('${firstImageStyle}', firstImageStyle))
+                const docRef = await addDoc(collection(db, "mail"), {
+                  to: [`${userData.data().user_email}`],
+                  message: {
+                    subject: emailSubject,
+                    html: html,
+                  }
+                });
+                console.log("Document written with ID: ", docRef.id);
+              } catch (e) {
+                console.error("Error adding document: ", e);
               }
-              toastr.success(hasBulkStatus ? emailLabel : 'Users updated correctly');
-              document.getElementById('update_user_modal').style.display = 'none';
-              $('body').css("overflow", "unset");
-            })();
-            setTimeout(function() {
-              window.location.reload();
-            }, 2000);
-          })
-          .catch((err) => {
-              toastr.error('There was an error updating the users info');
-              console.log('error updating users info', err);
-          });
+            }
+        }
       }
+
+      toastr.success(hasBulkStatus ? lastEmailLabel : 'Users updated correctly');
+      document.getElementById('bulk_users_form_modal').style.display = 'none';
+      $('body').css("overflow", "unset");
+      setTimeout(function() {
+        window.location.reload();
+      }, 2000);
+    } catch (err) {
+        toastr.error('There was an error updating the users info');
+        console.log('error updating users info', err);
     }
   }
   document.getElementById("bulk_user_form").addEventListener("submit", function(e){
