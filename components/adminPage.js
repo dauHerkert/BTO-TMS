@@ -1423,15 +1423,39 @@ export async function pageAdmin(user) {
   async function bulkUserUpdate(selectedData) {
     let bulk_user_form = document.getElementById('bulk_user_form');
     let bulk_status_update = document.getElementById('bulk_status');
+    let bulk_start_date = document.getElementById('bulk_Select-dates');
+    let bulk_end_date = document.getElementById('bulk_Select-dates2');
     const bulk_send_email = document.getElementById('bulk_send_email')
+    const bulkStatusValue = bulk_status_update.value;
+    const hasBulkStatus = bulkStatusValue && bulkStatusValue !== 'Select status';
+    const bulkStartDateValue = bulk_start_date ? bulk_start_date.value : '';
+    const bulkEndDateValue = bulk_end_date ? bulk_end_date.value : '';
+
+    if (!hasBulkStatus && !bulkStartDateValue && !bulkEndDateValue) {
+      toastr.error('Please select a status or date range to update');
+      return;
+    }
 
     for (let i = 0; i < selectedData.length; i++) {
       const userRef = doc(db, 'users', selectedData[i]);
       const userData = await getDoc(userRef);
-      if (userData.exists) {
-        setDoc(userRef, {
-          user_status: bulk_status_update.value,
-        }, { merge: true })
+      if (userData.exists()) {
+        const bulkUpdates = {};
+
+        if (hasBulkStatus) {
+          bulkUpdates.user_status = bulkStatusValue;
+        }
+
+        if (bulkStartDateValue) {
+          bulkUpdates.supplier_visit_dates = escapeHtml(bulkStartDateValue);
+          bulkUpdates.supplier_start_date = escapeHtml(bulkStartDateValue);
+        }
+
+        if (bulkEndDateValue) {
+          bulkUpdates.supplier_end_date = escapeHtml(bulkEndDateValue);
+        }
+
+        setDoc(userRef, bulkUpdates, { merge: true })
           .then(() => {
 
             // Applications - EN - Subjects and UI message Label
@@ -1499,18 +1523,18 @@ export async function pageAdmin(user) {
             let nameToDisplay = lastName;
 
             // Final Email info - Application Rejected
-            if (bulk_status_update.value == 'Declined') {
+            if (bulkStatusValue == 'Declined') {
               emailSubject = application_rejected_subject;
               emailLabel = application_rejected_label;
             }
 
             if (userData.data().account_type == "Press") {
-              if (bulk_status_update.value == 'Declined') {
+              if (bulkStatusValue == 'Declined') {
                 emailURL = genderPressRejectedURL;
               }
             } else {
               nameToDisplay = fullName;
-              if (bulk_status_update.value == 'Declined') {
+              if (bulkStatusValue == 'Declined') {
                 emailURL = supplier_application_rejected_url;
               } else {
                 emailURL = supplier_application_accepted_url;
@@ -1520,7 +1544,7 @@ export async function pageAdmin(user) {
             // TODO: review body modal-open
             // Application action email send
             (async () => {
-              if (bulk_send_email.checked && bulk_status_update.value != 'Pending') {
+              if (hasBulkStatus && bulk_send_email.checked && bulkStatusValue != 'Pending') {
                 try {
                   const html = await fetch(emailURL)
                     .then(response => response.text())
@@ -1539,7 +1563,7 @@ export async function pageAdmin(user) {
                   console.error("Error adding document: ", e);
                 }
               }
-              toastr.success(emailLabel);
+              toastr.success(hasBulkStatus ? emailLabel : 'Users updated correctly');
               document.getElementById('update_user_modal').style.display = 'none';
               $('body').css("overflow", "unset");
             })();
