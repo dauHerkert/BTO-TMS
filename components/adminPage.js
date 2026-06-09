@@ -1426,6 +1426,18 @@ export async function pageAdmin(user) {
     let bulk_start_date = document.getElementById('bulk_Select-dates');
     let bulk_end_date = document.getElementById('bulk_Select-dates2');
     const bulk_send_email = document.getElementById('bulk_send_email')
+    const bulkSubmitButton = document.getElementById('submit_button3');
+    const bulkSubmitDefaultLabel = bulkSubmitButton ? bulkSubmitButton.value : '';
+    const setBulkSubmitLoading = (isLoading) => {
+      if (!bulkSubmitButton) {
+        return;
+      }
+
+      bulkSubmitButton.disabled = isLoading;
+      bulkSubmitButton.value = isLoading
+        ? (storedLang && storedLang === 'de' ? 'Aktualisiere...' : 'Updating...')
+        : bulkSubmitDefaultLabel;
+    };
     const normalizeBulkStatus = (statusValue) => {
       const statusMap = {
         'Freigegeben': 'Ok',
@@ -1448,6 +1460,8 @@ export async function pageAdmin(user) {
       toastr.error('Please select a status or date range to update');
       return;
     }
+
+    setBulkSubmitLoading(true);
 
     try {
       let lastEmailLabel = 'Users updated correctly';
@@ -1590,6 +1604,7 @@ export async function pageAdmin(user) {
     } catch (err) {
         toastr.error('There was an error updating the users info');
         console.log('error updating users info', err);
+        setBulkSubmitLoading(false);
     }
   }
   document.getElementById("bulk_user_form").addEventListener("submit", function(e){
