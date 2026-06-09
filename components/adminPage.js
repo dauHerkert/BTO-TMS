@@ -1427,16 +1427,26 @@ export async function pageAdmin(user) {
     let bulk_end_date = document.getElementById('bulk_Select-dates2');
     const bulk_send_email = document.getElementById('bulk_send_email')
     const bulkSubmitButton = document.getElementById('submit_button3');
-    const bulkSubmitDefaultLabel = bulkSubmitButton ? bulkSubmitButton.value : '';
+    const bulkSubmitDefaultLabel = bulkSubmitButton ? (bulkSubmitButton.value || bulkSubmitButton.textContent) : '';
     const setBulkSubmitLoading = (isLoading) => {
       if (!bulkSubmitButton) {
         return;
       }
 
-      bulkSubmitButton.disabled = isLoading;
-      bulkSubmitButton.value = isLoading
+      const submitLabel = isLoading
         ? (storedLang && storedLang === 'de' ? 'Aktualisiere...' : 'Updating...')
         : bulkSubmitDefaultLabel;
+
+      bulkSubmitButton.disabled = isLoading;
+      bulkSubmitButton.setAttribute('aria-busy', isLoading ? 'true' : 'false');
+      bulkSubmitButton.setAttribute('aria-disabled', isLoading ? 'true' : 'false');
+      bulkSubmitButton.setAttribute('value', submitLabel);
+      bulkSubmitButton.value = submitLabel;
+      bulkSubmitButton.textContent = submitLabel;
+      bulkSubmitButton.innerText = submitLabel;
+      bulkSubmitButton.style.opacity = isLoading ? '0.65' : '';
+      bulkSubmitButton.style.cursor = isLoading ? 'wait' : '';
+      bulkSubmitButton.style.pointerEvents = isLoading ? 'none' : '';
     };
     const normalizeBulkStatus = (statusValue) => {
       const statusMap = {
