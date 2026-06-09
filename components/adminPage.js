@@ -1428,6 +1428,9 @@ export async function pageAdmin(user) {
     const bulk_send_email = document.getElementById('bulk_send_email')
     const bulkSubmitButton = document.getElementById('submit_button3');
     const bulkSubmitDefaultLabel = bulkSubmitButton ? (bulkSubmitButton.value || bulkSubmitButton.textContent) : '';
+    const waitForBulkSubmitPaint = () => new Promise((resolve) => {
+      requestAnimationFrame(() => requestAnimationFrame(resolve));
+    });
     const setBulkSubmitLoading = (isLoading) => {
       if (!bulkSubmitButton) {
         return;
@@ -1442,11 +1445,19 @@ export async function pageAdmin(user) {
       bulkSubmitButton.setAttribute('aria-disabled', isLoading ? 'true' : 'false');
       bulkSubmitButton.setAttribute('value', submitLabel);
       bulkSubmitButton.value = submitLabel;
-      bulkSubmitButton.textContent = submitLabel;
-      bulkSubmitButton.innerText = submitLabel;
+      bulkSubmitButton.innerHTML = isLoading
+        ? `<span class="bulk-submit-spinner" style="display:inline-block;width:18px;height:18px;margin-right:10px;border:2px solid currentColor;border-right-color:transparent;border-radius:50%;vertical-align:-3px;animation:bulk-submit-spin .75s linear infinite;"></span>${submitLabel}`
+        : submitLabel;
       bulkSubmitButton.style.opacity = isLoading ? '0.65' : '';
       bulkSubmitButton.style.cursor = isLoading ? 'wait' : '';
       bulkSubmitButton.style.pointerEvents = isLoading ? 'none' : '';
+
+      if (isLoading && !document.getElementById('bulk-submit-loading-styles')) {
+        const loadingStyles = document.createElement('style');
+        loadingStyles.id = 'bulk-submit-loading-styles';
+        loadingStyles.textContent = '@keyframes bulk-submit-spin{to{transform:rotate(360deg)}}';
+        document.head.appendChild(loadingStyles);
+      }
     };
     const normalizeBulkStatus = (statusValue) => {
       const statusMap = {
@@ -1472,6 +1483,7 @@ export async function pageAdmin(user) {
     }
 
     setBulkSubmitLoading(true);
+    await waitForBulkSubmitPaint();
 
     try {
       let lastEmailLabel = 'Users updated correctly';
@@ -1620,6 +1632,7 @@ export async function pageAdmin(user) {
   document.getElementById("bulk_user_form").addEventListener("submit", function(e){
     e.preventDefault();
     e.stopPropagation();
+    e.stopImmediatePropagation();
     if (adminInfo.basic_admin || adminInfo.company_admin || adminInfo.super_admin) {
       bulkUserUpdate(selectedData);
     }
